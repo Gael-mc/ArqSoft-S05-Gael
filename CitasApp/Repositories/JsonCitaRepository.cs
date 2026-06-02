@@ -34,4 +34,15 @@ namespace CitasApp.Repositories
         public List<Cita> ObtenerPorPaciente(int pacienteId) =>
             ObtenerTodos().Where(c => c.PacienteId == pacienteId).ToList();
     }
+
+    internal class CitaJson
+    {
+        public int Id { get; set; }
+        public int PacienteId { get; set; }
+        public int MedicoId { get; set; }
+        public string Fecha { get; set; } = string.Empty;
+        public string Hora { get; set; } = string.Empty;
+        public string Motivo { get; set; } = string.Empty;
+        public string Estado { get; set; } = "Pendiente";
+    }
 }
