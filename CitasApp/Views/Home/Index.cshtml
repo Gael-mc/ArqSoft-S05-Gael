@@ -1,8 +1,38 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div style="margin-bottom: 2.5rem;">
+    <h1>Panel Principal</h1>
+    <p style="color: var(--text-muted); font-size: 0.95rem;">Gestiona pacientes, médicos y citas desde un solo lugar.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">◉ Pacientes</div>
+            <div class="card-body">
+                <p>Consulta y administra los pacientes registrados en el sistema.</p>
+                <a asp-controller="Paciente" asp-action="Index" class="btn btn-primary">Ver Pacientes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">✚ Médicos</div>
+            <div class="card-body">
+                <p>Consulta el directorio de médicos y sus especialidades.</p>
+                <a asp-controller="Medico" asp-action="Index" class="btn btn-primary">Ver Médicos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header">◈ Citas</div>
+            <div class="card-body">
+                <p>Revisa y gestiona las citas médicas programadas.</p>
+                <a asp-controller="Cita" asp-action="Index" class="btn btn-primary">Ver Citas</a>
+            </div>
+        </div>
+    </div>
 </div>
