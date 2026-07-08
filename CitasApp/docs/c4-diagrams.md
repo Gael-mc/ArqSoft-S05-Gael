@@ -50,3 +50,47 @@ graph TD
     Web -->|Invoca servicios/repositorios| Infra
     Infra -->|Implementa interfaces de| Domain
     Infra -->|Lee/Escribe| Data
+
+
+    ## Nivel 3 — Componentes
+
+**¿Para quién es este diagrama?** Para el desarrollador que va a trabajar directamente dentro de `CitasApp.web` (o quien lo revise en un code review), y necesita ver cómo están organizados los controladores, servicios e interfaces internos.
+
+**¿Qué pregunta responde?** *¿Qué hay dentro de CitasApp.web y cómo colaboran sus partes para resolver una petición?*
+
+```mermaid
+graph TD
+    Cliente([Cliente])
+
+    subgraph "CitasApp.web"
+        CitasController[CitasController]
+        HomeController[HomeController]
+        Views[Views\nRazor]
+    end
+
+    subgraph "CitasApp.Domain"
+        ICitaRepo[ICitaRepository\nInterfaz]
+        CitaEntity[Cita / Paciente\nEntidades]
+    end
+
+    subgraph "CitasApp.Infrastructure"
+        CitaRepoImpl[CitaRepository\nImplementación]
+    end
+
+    Data[(data/*.json)]
+
+    Cliente -->|HTTP| CitasController
+    Cliente -->|HTTP| HomeController
+    CitasController --> Views
+    CitasController -->|Depende de| ICitaRepo
+    ICitaRepo -.->|Implementada por| CitaRepoImpl
+    CitaRepoImpl -->|Lee/Escribe| Data
+    CitasController -->|Usa| CitaEntity
+    CitaRepoImpl -->|Usa| CitaEntity
+```
+
+---
+
+## Notas de proceso
+
+Este archivo se construyó en tres commits separados sobre la rama `diagramas`, uno por cada nivel, para reflejar el proceso de documentación de la arquitectura.
