@@ -1,26 +1,15 @@
 ﻿using CitasApp.Domain.Interfaces;
 using CitasApp.Domain.Models;
-using Microsoft.AspNetCore.Hosting;
-using System.Text.Json;
 
-namespace CitasApp.Infrastructure.Repositories
+namespace CitasApp.Repositories
 {
     public class JsonMedicoRepository : IMedicoRepository
     {
-        private readonly string _path;
-        private readonly JsonSerializerOptions _options = new() { WriteIndented = true };
+        private readonly IJsonFileStore _store;
 
-        public JsonMedicoRepository(IWebHostEnvironment env)
-        {
-            _path = Path.Combine(env.ContentRootPath, "data", "medicos.json");
-        }
+        public JsonMedicoRepository(IJsonFileStore store) => _store = store;
 
-        public List<Medico> ObtenerTodos()
-        {
-            if (!File.Exists(_path)) return new();
-            var json = File.ReadAllText(_path);
-            return JsonSerializer.Deserialize<List<Medico>>(json, _options) ?? new();
-        }
+        public List<Medico> ObtenerTodos() => _store.Leer<Medico>("medicos.json");
 
         public Medico? ObtenerPorId(int id) =>
             ObtenerTodos().FirstOrDefault(m => m.Id == id);
