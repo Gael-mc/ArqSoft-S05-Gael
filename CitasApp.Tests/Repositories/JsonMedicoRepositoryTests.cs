@@ -44,7 +44,7 @@ namespace CitasApp.Tests.Repositories
 
             // Assert
             Assert.NotNull(medico);
-            Assert.Equal("Luis", medico!.Nombre);
+             Assert.Equal("Alguien que no existe", medico!.Nombre);
         }
 
         [Fact]
