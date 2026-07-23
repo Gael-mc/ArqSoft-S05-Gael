@@ -1,68 +1,47 @@
-# CitasApp
+# Actividad 35 — Pruebas xUnit + Pipeline CI con GitHub Actions
 
-Aplicación web para la gestión de citas médicas desarrollada con ASP.NET Core MVC (.NET 10).
+## Descripción
 
-## Descripción General
+Se agregó una suite de pruebas unitarias con **xUnit** para el proyecto **CitasApp**, además de un pipeline de **Integración Continua (CI)** con **GitHub Actions** que compila y ejecuta esas pruebas automáticamente en cada `push` y en cada Pull Request.
 
-El proyecto sigue el enfoque de Arquitectura Hexagonal (Ports & Adapters), permitiendo una clara separación de responsabilidades y facilitando el mantenimiento, la escalabilidad y el reemplazo de componentes sin afectar la lógica principal del sistema.
+## Rama
 
-## Estructura del Proyecto
+`actividad-35-pruebas-ci` (creada a partir de `refactorizacion-actividad-32`)
 
-La solución está organizada en cuatro capas principales:
+## Clases probadas
 
-* **CitasApp.Domain:** contiene las entidades, reglas de negocio e interfaces principales del sistema.
-* **CitasApp.Application:** administra los casos de uso y coordina la comunicación entre las diferentes capas.
-* **CitasApp.Infrastructure:** implementa los mecanismos de almacenamiento de datos mediante repositorios JSON y en memoria.
-* **CitasApp.Web:** incluye la interfaz MVC, controladores, vistas y configuración de la aplicación.
+Se agregó el proyecto **CitasApp.Tests**, con pruebas siguiendo el patrón **Arrange-Act-Assert** para 3 clases del proyecto:
 
-## Relación entre Capas
+- **JsonMedicoRepository** — obtención de todos los médicos y búsqueda por Id.
+- **JsonPacienteRepository** — obtención de todos los pacientes y búsqueda por Id.
+- **JsonCitaRepository** — obtención de todas las citas, mapeo de fecha/hora, y filtrado por paciente.
 
-Web → Application → Domain ← Infrastructure
+Para aislar las pruebas del sistema de archivos real, se creó un doble de prueba **FakeJsonFileStore**, que implementa `IJsonFileStore` y permite inyectar datos en memoria.
 
-## Funcionalidades
+## Pipeline CI
 
-### Pacientes
+Archivo: `.github/workflows/ci.yml`
 
-* Consulta de pacientes registrados.
-* Visualización de información detallada de cada paciente.
+El workflow se dispara en cada `push` y `pull_request`, y ejecuta:
 
-### Médicos
+1. Checkout del repositorio
+2. Configuración de .NET 10
+3. `dotnet restore`
+4. `dotnet build`
+5. `dotnet test`
 
-* Listado de médicos disponibles.
-* Consulta de datos específicos de cada profesional.
+Si alguna prueba falla, el pipeline marca el check en rojo ❌; si todas pasan, lo marca en verde ✅.
 
-### Citas
+## Evidencia
 
-* Visualización completa de la agenda médica.
-* Filtrado de citas por paciente.
+Se abrió el Pull Request **#1** (`actividad-35-pruebas-ci` → `refactorizacion-actividad-32`), donde se documentó:
 
-## Almacenamiento de Datos
+- Check en verde ✅ tras la implementación inicial de las pruebas.
+- Un fallo intencional provocado modificando una aserción en `JsonMedicoRepositoryTests.cs`, que hizo que el pipeline mostrara el check en rojo ❌.
+- La corrección de esa prueba, regresando el pipeline a verde ✅.
 
-La información se almacena en archivos JSON ubicados en:
+## Cómo correr las pruebas localmente
 
-`CitasApp.Web/data/`
-
-Archivos utilizados:
-
-* `pacientes.json`
-* `medicos.json`
-* `citas.json`
-
-Además, se incluye una implementación de repositorio en memoria para demostrar la flexibilidad de la arquitectura y el intercambio de adaptadores.
-
-## Rutas Principales
-
-* `/Paciente` → listado de pacientes.
-* `/Medico` → listado de médicos.
-* `/Cita` → agenda general de citas.
-* `/Cita/PorPaciente?pacienteId=1` → consulta de citas asociadas a un paciente específico.
-
-## Requisitos
-
-* .NET 10.0
-* Visual Studio 2022
-
-## Ramas del Repositorio
-
-* **main:** versión estable con persistencia mediante archivos JSON.
-* **hexagonal:** implementación completa utilizando Arquitectura Hexagonal distribuida en múltiples proyectos.
+```bash
+dotnet test CitasApp.slnx
+```
